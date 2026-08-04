@@ -1,44 +1,69 @@
-const express = require("express");
-const router = express.Router();
 const transporter = require("../utils/mailer");
 
-router.post("/", async (req, res) => {
+module.exports = async (req, res) => {
+
+    // Allow requests from your frontend
+    res.setHeader("Access-Control-Allow-Origin", "https://uniweldz-solutions.vercel.app");
+    res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+    // Handle preflight request
+    if (req.method === "OPTIONS") {
+        return res.status(200).end();
+    }
+
+    // Allow only POST
+    if (req.method !== "POST") {
+        return res.status(405).json({
+            success: false,
+            message: "Method Not Allowed",
+        });
+    }
+
     try {
-        const { name, email, phone, company, message } = req.body;
+
+        const {
+            name,
+            email,
+            phone,
+            company,
+            message,
+        } = req.body;
+
+        // Validate required fields
+        if (!name || !email || !message) {
+            return res.status(400).json({
+                success: false,
+                message: "Required fields are missing",
+            });
+        }
 
         await transporter.sendMail({
-            // Sender shown in the inbox
             from: `"Uniweldz Solutions" <${process.env.EMAIL_USER}>`,
-
-            // Your company email receives the inquiry
             to: process.env.RECEIVER_EMAIL,
-
-            // Clicking Reply replies to the customer
             replyTo: email,
-
             subject: `New Inquiry from ${name}`,
-
             html: `
                 <h2>📩 New Inquiry</h2>
 
-                <table style="border-collapse: collapse; width: 100%;">
+                <table border="1" cellpadding="8" cellspacing="0">
                     <tr>
-                        <td><strong>Name:</strong></td>
+                        <td><b>Name</b></td>
                         <td>${name}</td>
                     </tr>
 
                     <tr>
-                        <td><strong>Email:</strong></td>
+                        <td><b>Email</b></td>
                         <td>${email}</td>
                     </tr>
 
                     <tr>
-                        <td><strong>Phone:</strong></td>
+                        <td><b>Phone</b></td>
                         <td>${phone || "N/A"}</td>
                     </tr>
 
                     <tr>
-                        <td><strong>Company:</strong></td>
+                        <td><b>Company</b></td>
                         <td>${company || "N/A"}</td>
                     </tr>
                 </table>
@@ -51,18 +76,20 @@ router.post("/", async (req, res) => {
             `,
         });
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             message: "Email sent successfully",
         });
+
     } catch (err) {
+
         console.error("Mail Error:", err);
 
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: "Failed to send email",
         });
-    }
-});
 
-module.exports = router;
+    }
+
+};
