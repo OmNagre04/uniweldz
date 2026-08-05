@@ -1,9 +1,7 @@
 {
   "name": "uniweldz-backend",
-  "version": "1.0.0",
-  "description": "Serverless backend for Uniweldz Solutions",
-  "type": "commonjs",
   "private": true,
+  "type": "commonjs",
   "dependencies": {
     "nodemailer": "^9.0.3"
   }
