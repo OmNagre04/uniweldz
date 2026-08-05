@@ -183,7 +183,7 @@
         status.textContent = "Sending your inquiry...";
         status.style.color = "#ffc107";
 
-        const response = await fetch("http://localhost:5000/contact", {
+        const response = await fetch("https://uniweldz-backend.vercel.app/api/contact", {
 
             method: "POST",
 
