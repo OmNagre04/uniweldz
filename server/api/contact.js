@@ -3,7 +3,7 @@ const transporter = require("../utils/mailer");
 module.exports = async (req, res) => {
 
     // Allow requests from your frontend
-    res.setHeader("Access-Control-Allow-Origin", "https://uniweldz-solutions.vercel.app");
+    res.setHeader("Access-Control-Allow-Origin", "https://www.uniweldz-solutions.com");
     res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
